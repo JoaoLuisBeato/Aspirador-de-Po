@@ -1,7 +1,7 @@
 import random
 import os
 
-def imprimir_tabela(matrix, tipo_ambiente, quantidade_salas, Debug):
+def imprimir_tabela(matrix, tipo_ambiente, quantidade_salas):
 
     for row in range(len(matrix)):
         for item in matrix[row][:quantidade_salas]:
@@ -224,9 +224,7 @@ if __name__ == "__main__":
     quantidade_salas_sujas = int(input (" Digite quantas salas sujas você quer (max <= quantidade de salas): "))
     tipo_de_ambiente = int(input("\n1. Base\n2. Onisciente\nQual vai ser o tipo de ambiente?: "))
 
-    Debug = (preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente))[2] 
-    
-    
+    Debug = (preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente))[2]
 
     RandomizarPosicaoRobo(ambiente, quantidade_salas)
     imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
