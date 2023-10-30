@@ -4,20 +4,35 @@ import copy
 
 def imprimir_tabela(matrix, tipo_ambiente, quantidade_salas):
 
-    for row in range(len(matrix)):
+    if tipo_ambiente == 1:
+        for row in range(len(matrix)):
+            i = 0
+            if row != 2:
+                while i < quantidade_salas:
+                    print(matrix[row][i], end='\t') # Escreve o valor como não descoberto
+                    i = i + 1
+                print()  # Pule para a próxima linha após cada linha da matriz
+        
+        print() # Linha do Debug
         i = 0
         while i < quantidade_salas:
-            print(matrix[row][i], end='\t') # Escreve o valor como não descoberto
+            print(Debug[i], end='\t') # Escreve o valor como não descoberto
             i = i + 1
-        print()  # Pule para a próxima linha após cada linha da matriz
-    
 
-    print() # Linha do Debug
-    i = 0
-    while i < quantidade_salas:
-        print(Debug[i], end='\t') # Escreve o valor como não descoberto
-        i = i + 1
-
+    if tipo_ambiente == 2:
+        for row in range(len(matrix)):
+            i = 0
+            if row != 3:
+                while i < quantidade_salas:
+                    print(matrix[row][i], end='\t') # Escreve o valor como não descoberto
+                    i = i + 1
+                print()  # Pule para a próxima linha após cada linha da matriz
+        
+        print() # Linha do Debug
+        i = 0
+        while i < quantidade_salas:
+            print(Debug[i], end='\t') # Escreve o valor como não descoberto
+            i = i + 1
 
     
 
@@ -245,6 +260,7 @@ Debug = copy.copy(ambiente[2])
 
 RandomizarPosicaoRobo(ambiente, quantidade_salas)
 imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+forma_de_pilotar = 1
 print("\n\n\n\n\n")
 
 movimentar_robo = ''
