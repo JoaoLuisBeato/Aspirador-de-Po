@@ -208,24 +208,40 @@ def automatico_onisciente(ambiente, quantidade_sujeira, quantidade_salas):
 
 def automatico_base(ambiente, quantidade_sujeira):
     pos = encontrar_posicao_robo(ambiente)
+    contador_esquerda = 0
+    contador_direita = 0
+    limpar(pos, ambiente)
     # limpar(pos, ambiente)
-    while pos > 0:
-        key = 'a'
-        if mover(key, ambiente):
-            quantidade_sujeira -= 1
-
-        imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
-        pos -= 1
-
-    while pos < quantidade_salas:
-        key = 'd'
-        if mover(key, ambiente):
-            quantidade_sujeira -= 1
-        
-        imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
-        pos += 1
-    return 
-
+    for i in range (pos, 0, -1):
+        contador_esquerda += 1
+    for j in range (pos, quantidade_salas - 1, 1):
+        contador_direita += 1
+    print(contador_esquerda)
+    print(contador_direita)
+    if contador_direita < contador_esquerda:
+        i = pos
+        while(i < quantidade_salas - 1):
+            key = 'd'
+            mover(key, ambiente)
+            imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+            i = i + 1
+        while(i > 0):
+            key = 'a'
+            mover(key, ambiente)
+            imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+            i = i - 1
+    elif contador_esquerda < contador_direita:
+        i = pos
+        while(i > 0):
+            key = 'a'
+            mover(key, ambiente)
+            imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+            i = i - 1
+        while(i < quantidade_salas):
+            key = 'd'
+            mover(key, ambiente)
+            imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+            i = i + 1
 
 def LimparTerminal():
     sistema_operacional = os.name
@@ -263,15 +279,17 @@ imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
 forma_de_pilotar = 1
 print("\n\n\n\n\n")
 
-movimentar_robo = ''
+# movimentar_robo = ''
 
-while movimentar_robo != 'x':
-    imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
-    movimentar_robo = input("\nMovimente o robô com A ou D : ")
-    mover_manual(movimentar_robo, ambiente)
+# while movimentar_robo != 'x':
+#     imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+#     movimentar_robo = input("\nMovimente o robô com A ou D : ")
+#     mover_manual(movimentar_robo, ambiente)
     #LimparTerminal()
 #automatico_onisciente(ambiente, quantidade_salas_sujas, quantidade_salas)
-#automatico_base(ambiente, quantidade_salas_sujas)
+automatico_base(ambiente, quantidade_salas_sujas)
+
+
         
         
 
