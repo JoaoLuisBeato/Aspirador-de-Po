@@ -3,7 +3,7 @@ import os
 import copy
 
 def imprimir_tabela(matrix, tipo_ambiente, quantidade_salas):
-
+    print()
     if tipo_ambiente == 1:
         for row in range(len(matrix)):
             i = 0
@@ -34,6 +34,8 @@ def imprimir_tabela(matrix, tipo_ambiente, quantidade_salas):
             print(Debug[i], end='\t') # Escreve o valor como não descoberto
             i = i + 1
 
+    print("\n\n")
+
     
 
 
@@ -45,7 +47,6 @@ def RandomizarPosicaoRobo(AspiradorDePo, quantidade_salas):
     
     # Gera um número aleatório entre 0 - 9
     random_integer = random.randint(0, quantidade_salas - 1)
-    print(quantidade_salas)
 
     # Marca o robô como Robô no array de posicao do robo com base no
     # número aleatório
@@ -104,21 +105,27 @@ def mover(input, ambiente):
         return limpar(pos-1, ambiente)
     
 
-def mover_manual(input, ambiente):
+def mover_manual(input, ambiente, salas_sujas):
     pos = encontrar_posicao_robo(ambiente)
 
     if input == 'd' and pos + 1 <= quantidade_salas - 1:
         ambiente[1][pos] = ''
         ambiente[1][pos + 1] = 'Robo'
+
     elif input == 'a' and pos - 1 >= 0:
         ambiente[1][pos] = ''
         ambiente[1][pos - 1] = 'Robo'
+
     elif input == 'limpar':
-        limpar(pos, ambiente)
-    return
+        Sala_foi_limpa = limpar(pos, ambiente)
+        
+        if Sala_foi_limpa == True:
+            salas_sujas = salas_sujas - 1
+
+    return salas_sujas
     
 
-def automatico_onisciente(ambiente, quantidade_sujeira, quantidade_salas):
+def automatico_onisciente(ambiente, quantidade_salas):
     PosicaoRobo = encontrar_posicao_robo(ambiente)
     limpar(PosicaoRobo, ambiente)
     SujeiraEsquerdaMaisLonge_distancia = 0
@@ -206,7 +213,7 @@ def automatico_onisciente(ambiente, quantidade_sujeira, quantidade_salas):
     return 
 
 
-def automatico_base(ambiente, quantidade_sujeira):
+def automatico_base(ambiente):
     pos = encontrar_posicao_robo(ambiente)
     contador_esquerda = 0
     contador_direita = 0
@@ -216,10 +223,13 @@ def automatico_base(ambiente, quantidade_sujeira):
         contador_esquerda += 1
     for j in range (pos, quantidade_salas - 1, 1):
         contador_direita += 1
-    print(contador_esquerda)
-    print(contador_direita)
+    
+    #print(contador_direita)
+    #print(contador_esquerda)
+        
     if contador_direita < contador_esquerda:
         i = pos
+        
         while(i < quantidade_salas - 1):
             key = 'd'
             mover(key, ambiente)
@@ -237,7 +247,7 @@ def automatico_base(ambiente, quantidade_sujeira):
             mover(key, ambiente)
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i - 1
-        while(i < quantidade_salas):
+        while(i < quantidade_salas - 1):
             key = 'd'
             mover(key, ambiente)
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
@@ -255,29 +265,62 @@ def LimparTerminal():
         # Caso o sistema operacional não seja suportado, apenas imprima uma mensagem
         print("Limpeza de terminal não suportada para este sistema operacional.")
 
+cleaning = True
 
-Salas = ['A','B','C','D','E','F','G','H','I','J']
-AspiradorDePo = ['','','','','','','','','','']
-Sujeira = ['','','','','','','','','','']
-base_de_ambiente = ['????', '????', '????', '????', '????', '????', '????', '????', '????', '????']
+while cleaning:
 
-ambiente = [Salas, AspiradorDePo, Sujeira, base_de_ambiente]
+    Salas = ['A','B','C','D','E','F','G','H','I','J']
+    AspiradorDePo = ['','','','','','','','','','']
+    Sujeira = ['','','','','','','','','','']
+    base_de_ambiente = ['????', '????', '????', '????', '????', '????', '????', '????', '????', '????']
 
+    ambiente = [Salas, AspiradorDePo, Sujeira, base_de_ambiente]
 
-print("\n===========================\n")
-quantidade_salas = int(input(" Digite a quantidade de Salas (max = 10): "))
-quantidade_salas_sujas = int(input (" Digite quantas salas sujas você quer (max <= quantidade de salas): "))
-tipo_de_ambiente = int(input("\n1. Base\n2. Onisciente\nQual vai ser o tipo de ambiente?: "))
+    print("\n===========================\n")
+    quantidade_salas = int(input(" Digite a quantidade de Salas (max = 10): "))
+    quantidade_salas_sujas = int(input (" Digite quantas salas sujas você quer (max <= quantidade de salas): "))
+    tipo_de_ambiente = int(input("\n1. Base\n2. Onisciente\nQual vai ser o tipo de ambiente?: "))
+    forma_de_pilotar = int(input("\n1. Automático\n2. Manual\nQual será o tipo de movimentação?: "))
 
-preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente)[2]
+    preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente)
 
-Debug = copy.copy(ambiente[2])
+    Debug = copy.copy(ambiente[2])
+
+    RandomizarPosicaoRobo(ambiente, quantidade_salas)
+
+    imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+
+    print("\n\n")
+
+    user_choice = (tipo_de_ambiente, forma_de_pilotar)
+
+    match user_choice:
+        
+        case (1, 1): 
+            automatico_base(ambiente)
+
+        case (1, 2):
+            while ambiente[3].index("????") != quantidade_salas:
+                imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+                movimentar_robo = input("\nMovimente o robô com A ou D. Caso queira limpar, escreva 'limpar': ")
+                quantidade_salas_sujas = mover_manual(movimentar_robo, ambiente, quantidade_salas_sujas)
+
+        case (2, 1):
+            automatico_onisciente(ambiente, quantidade_salas)
+
+        case (2, 2):
+            while quantidade_salas_sujas != 0:
+                imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+                movimentar_robo = input("\nMovimente o robô com A ou D. Caso queira limpar, escreva 'limpar' ")
+                quantidade_salas_sujas = mover_manual(movimentar_robo, ambiente, quantidade_salas_sujas)
+
+    imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
+    limpar_nova_sala = int(input("\n\n\n\n1. Sim\n2. Não\nDeseja limpar uma nova sala?: "))
+
+    if limpar_nova_sala == 2:
+        cleaning = False
+
     
-
-RandomizarPosicaoRobo(ambiente, quantidade_salas)
-imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
-forma_de_pilotar = 1
-print("\n\n\n\n\n")
 
 # movimentar_robo = ''
 
@@ -287,7 +330,7 @@ print("\n\n\n\n\n")
 #     mover_manual(movimentar_robo, ambiente)
     #LimparTerminal()
 #automatico_onisciente(ambiente, quantidade_salas_sujas, quantidade_salas)
-automatico_base(ambiente, quantidade_salas_sujas)
+#automatico_base(ambiente, quantidade_salas_sujas)
 
 
         
