@@ -91,6 +91,18 @@ def limpar(pos, ambiente):
     else:
         return False
 
+def gerar_sujeira(pos, ambiente):
+    sujeiraNova = False
+    
+    random_integer = random.randint(1, 10)
+    if random_integer == 5:
+        print("\n\n =========== Sujeira Nova ============\n\n")
+        while :
+            sujeiraNova_posicao = random.randint(0, quantidade_salas - 1)
+        
+        ambiente[2][sujeiraNova_posicao] = 'Sujo'
+        sujeiraNova = True  
+
 def mover(input, ambiente):
     pos = encontrar_posicao_robo(ambiente)
 
@@ -160,14 +172,20 @@ def automatico_onisciente(ambiente, quantidade_salas):
         i = PosicaoRobo
         while(i < SujeiraDireitaMaisLonge_posicao):
             key = 'd'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i + 1
         
         # i = SujeiraDireitaMaisLonge_posicao
         while(i > SujeiraEsquerdaMaisLonge_posicao):
             key = 'a'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i - 1
 
@@ -180,13 +198,19 @@ def automatico_onisciente(ambiente, quantidade_salas):
         i = PosicaoRobo
         while(i > SujeiraEsquerdaMaisLonge_posicao):
             key = 'a'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i - 1
         
         while(i < SujeiraDireitaMaisLonge_posicao):
             key = 'd'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i + 1
 
@@ -195,7 +219,10 @@ def automatico_onisciente(ambiente, quantidade_salas):
         i = PosicaoRobo
         while(i > SujeiraEsquerdaMaisLonge_posicao):
             key = 'a'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i - 1
 
@@ -206,11 +233,14 @@ def automatico_onisciente(ambiente, quantidade_salas):
         i = PosicaoRobo   
         while(i < SujeiraDireitaMaisLonge_posicao):
             key = 'd'
-            mover(key, ambiente)
+            aux, SujeiraNova = mover(key, ambiente)
+            if(SujeiraNova == True):
+                return "Refazer"
+            
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i + 1
 
-    return 
+    return "Feito"
 
 
 def automatico_base(ambiente):
@@ -266,6 +296,7 @@ def LimparTerminal():
         print("Limpeza de terminal não suportada para este sistema operacional.")
 
 cleaning = True
+Refazer = "refazer"
 
 while cleaning:
 
@@ -306,7 +337,12 @@ while cleaning:
                 quantidade_salas_sujas = mover_manual(movimentar_robo, ambiente, quantidade_salas_sujas)
 
         case (2, 1):
-            automatico_onisciente(ambiente, quantidade_salas)
+            while Refazer == "refazer":
+                resultado = automatico_onisciente(ambiente, quantidade_salas)
+                if resultado == "refazer":
+                    Refazer = "refazer"
+                else:
+                    Refazer = "feito"
 
         case (2, 2):
             while quantidade_salas_sujas != 0:
