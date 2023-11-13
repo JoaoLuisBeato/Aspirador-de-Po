@@ -62,6 +62,7 @@ def preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente):
         print("Quantidade maior de sujeiras do que salas")
         return 0
     
+    #Faz o preenchimento das salas sujas, sempre colocando em um lugar que não esteja sujo
     while quantidade_salas_sujas != 0:
         random_integer = random.randint(0, quantidade_salas - 1)
         if(ambiente[2][random_integer] == ''):
@@ -70,6 +71,7 @@ def preencher_sala(quantidade_salas, quantidade_salas_sujas, ambiente):
         else:
             continue
     
+    #Faz a troca dos valores vazios para LIMPO
     for i in range(0, quantidade_salas):
         if(ambiente[2][i] == ''): 
             ambiente[2][i] = 'Limpo'    
@@ -84,6 +86,8 @@ def encontrar_posicao_robo(ambiente):
             return i
     return None
 
+
+
 def limpar(pos, ambiente):
 
     ambiente[3][pos] = 'Limpo'
@@ -92,6 +96,8 @@ def limpar(pos, ambiente):
         return True
     else:
         return False
+
+
 
 def gerar_sujeira(pos, ambiente):
     sujeira_igual = 1
@@ -109,8 +115,10 @@ def gerar_sujeira(pos, ambiente):
                 return True
             else:
                 continue
+
     else:
         return False
+
 
 
 def mover(input, ambiente):
@@ -151,6 +159,7 @@ def automatico_onisciente(ambiente, quantidade_salas):
     sujeira_res = ''
     PosicaoRobo = encontrar_posicao_robo(ambiente)
     res_aaa = limpar(PosicaoRobo, ambiente)
+
     if(res_aaa):
         if(gerar_sujeira(PosicaoRobo, ambiente)):
             sujeira_res = 'analisar'
@@ -158,6 +167,8 @@ def automatico_onisciente(ambiente, quantidade_salas):
             return sujeira_res
         imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
     
+
+
     SujeiraEsquerdaMaisLonge_distancia = 0
     SujeiraDireitaMaisLonge_distancia = 0
     SujeiraEsquerdaMaisLonge_posicao = PosicaoRobo
@@ -328,6 +339,8 @@ def automatico_onisciente(ambiente, quantidade_salas):
     return sujeira_res
 
 
+
+
 def automatico_base(ambiente):
     pos = encontrar_posicao_robo(ambiente)
     contador_esquerda = 0
@@ -353,6 +366,7 @@ def automatico_base(ambiente):
             mover(key, ambiente)
             imprimir_tabela(ambiente, tipo_de_ambiente, quantidade_salas)
             i = i - 1
+            
     elif contador_esquerda < contador_direita:
         i = pos
         while(i > 0):
